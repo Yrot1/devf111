@@ -1,0 +1,163 @@
+{
+  "name": "held-out-v1",
+  "label": "课程留出集 v1（9 例）",
+  "description": "固定回归基线：5 份知识库文档、9 条 Case，含正常事实、关键词干扰、无答案问题与新旧规则冲突。",
+  "schema_version": 1,
+  "recommended": true,
+  "repository_names": [
+    "openai/openai-quickstart-python"
+  ],
+  "cases": [
+    {
+      "id": "auth-401-recovery",
+      "kind": "positive",
+      "question": "业务请求收到 HTTP 401 后，客户端应该怎样恢复原请求？",
+      "reference": "暂停继续发送需要登录态的请求，只允许一次刷新 Access Token；刷新成功后只重试原请求一次。刷新接口或重试仍返回 401 时，清空登录态并引导用户重新登录。",
+      "source_file": "01_账号与令牌故障排查.md",
+      "source_type": "knowledge_file",
+      "must_include": [
+        "刷新一次",
+        "只重试原请求一次",
+        "清空本地登录态",
+        "重新登录"
+      ],
+      "must_not_include": [],
+      "required_tools": [],
+      "expected_tool_calls": []
+    },
+    {
+      "id": "auth-exact-error-code",
+      "kind": "positive",
+      "question": "error_code 是 REFRESH_TOKEN_EXPIRED 时应该怎么处理？",
+      "reference": "REFRESH_TOKEN_EXPIRED 必须引导用户重新登录，不能继续刷新令牌。",
+      "source_file": "01_账号与令牌故障排查.md",
+      "source_type": "knowledge_file",
+      "must_include": [
+        "REFRESH_TOKEN_EXPIRED",
+        "重新登录"
+      ],
+      "must_not_include": [],
+      "required_tools": [],
+      "expected_tool_calls": []
+    },
+    {
+      "id": "release-error-rate",
+      "kind": "positive",
+      "question": "当前有效规则中，核心接口错误率达到什么条件必须立即回滚？",
+      "reference": "新版本观察期内，核心接口错误率超过 2% 并持续 5 分钟时必须立即回滚。",
+      "source_file": "02_生产发布与回滚手册.md",
+      "source_type": "knowledge_file",
+      "must_include": [
+        "2%",
+        "5 分钟",
+        "立即回滚"
+      ],
+      "must_not_include": [
+        "5%",
+        "10 分钟才"
+      ],
+      "required_tools": [],
+      "expected_tool_calls": []
+    },
+    {
+      "id": "release-window",
+      "kind": "positive",
+      "question": "常规生产发布安排在每周哪几天、什么时间？",
+      "reference": "常规生产发布安排在每周二和周四 14:00 至 16:00。",
+      "source_file": "02_生产发布与回滚手册.md",
+      "source_type": "knowledge_file",
+      "must_include": [
+        "周二",
+        "周四",
+        "14:00",
+        "16:00"
+      ],
+      "must_not_include": [],
+      "required_tools": [],
+      "expected_tool_calls": []
+    },
+    {
+      "id": "travel-hotel-approval",
+      "kind": "positive",
+      "question": "上海住宿上限是多少，报销单总额不超过和超过 5000 元时分别由谁审批？",
+      "reference": "上海普通岗位住宿每晚不超过 600 元；报销单总额不超过 5000 元时由直属主管审批，超过 5000 元时还需要部门负责人二次审批。",
+      "source_file": "03_差旅与报销制度.md",
+      "source_type": "knowledge_file",
+      "must_include": [
+        "600 元",
+        "直属主管",
+        "部门负责人"
+      ],
+      "must_not_include": [
+        "450 元"
+      ],
+      "required_tools": [],
+      "expected_tool_calls": []
+    },
+    {
+      "id": "mobile-research-count",
+      "kind": "positive",
+      "question": "移动端登录体验调研访谈了多少名用户？",
+      "reference": "产品团队在 2026 年第二季度访谈了 28 名移动端用户。",
+      "source_file": "04_移动端登录体验调研.md",
+      "source_type": "knowledge_file",
+      "must_include": [
+        "28 名"
+      ],
+      "must_not_include": [],
+      "required_tools": [],
+      "expected_tool_calls": []
+    },
+    {
+      "id": "cross-document-login-release",
+      "kind": "positive",
+      "question": "登录链路发布前要验证哪些路径，线上请求遇到 401 又应怎样恢复？",
+      "reference": "发布前要验证旧 Access Token、刷新后的 Access Token 和重新登录三条路径。线上请求收到 401 后只刷新一次 Access Token，并只重试原请求一次；仍失败时清空登录态并重新登录。",
+      "source_file": "01_账号与令牌故障排查.md",
+      "source_type": "knowledge_file",
+      "must_include": [
+        "旧 Access Token",
+        "刷新后的 Access Token",
+        "重新登录",
+        "只重试原请求一次",
+        "清空本地登录态"
+      ],
+      "must_not_include": [],
+      "required_tools": [],
+      "expected_tool_calls": []
+    },
+    {
+      "id": "unknown-revenue-target",
+      "kind": "no_answer",
+      "question": "公司的 2028 年营收目标是多少？",
+      "reference": "当前知识库没有公司的 2028 年营收目标，系统应拒绝回答并说明缺少对应经营目标资料。",
+      "source_file": null,
+      "source_type": "knowledge_file",
+      "must_include": [
+        "无法确定"
+      ],
+      "must_not_include": [
+        "亿元",
+        "万亿元"
+      ],
+      "required_tools": [],
+      "expected_tool_calls": []
+    },
+    {
+      "id": "conflicting-rollback-threshold",
+      "kind": "conflict",
+      "question": "新旧发布资料中的核心接口错误率回滚阈值是否冲突？",
+      "reference": "两份资料存在冲突：现行手册规定错误率超过 2% 并持续 5 分钟立即回滚；已废弃备忘记录的是超过 5% 并持续 10 分钟。回答必须同时说明新旧状态，以现行手册为准。",
+      "source_file": "02_生产发布与回滚手册.md",
+      "source_type": "knowledge_file",
+      "must_include": [
+        "2%",
+        "5%",
+        "废弃"
+      ],
+      "must_not_include": [],
+      "required_tools": [],
+      "expected_tool_calls": []
+    }
+  ]
+}
