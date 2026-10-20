@@ -45,3 +45,6 @@ devflow_demo.db
 Thumbs.db
 .idea/
 .vscode/
+
+# AI 文档流水线产物（本地生成，不入库）
+.workbuddy/
