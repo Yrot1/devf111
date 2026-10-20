@@ -158,7 +158,7 @@ def _milvus_vector_candidates(
     metadata_filters: dict | None,
     query_embedding: list[float] | None = None,
 ) -> list[dict[str, Any]]:
-    milvus_results = search_milvus_documents(
+    milvus_results: list[dict[str, Any]] = search_milvus_documents(
         repo_id,
         query,
         source_type=source_types[0] if len(source_types) == 1 else None,

@@ -92,7 +92,12 @@ class LLMClient:
                         chunk = json.loads(data)
                     except json.JSONDecodeError:
                         continue
-                    delta = chunk.get("choices", [{}])[0].get("delta", {})
+                    # 服务端最后会发一条只带 usage 的收尾 chunk，其 choices 为空列表。
+                    # 直接取 choices[0] 会抛 IndexError，因此这里先判空再取。
+                    choices = chunk.get("choices") or []
+                    if not choices or not isinstance(choices[0], dict):
+                        continue
+                    delta = choices[0].get("delta") or {}
                     content = delta.get("content")
                     if content:
                         yield str(content)
