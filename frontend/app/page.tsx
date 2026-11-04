@@ -955,6 +955,7 @@ export default function DashboardPage() {
   const [analyzingRunId, setAnalyzingRunId] = useState<string | null>(null);
   const [ciAnalysisError, setCiAnalysisError] = useState<string | null>(null);
   const [syncing, setSyncing] = useState(false);
+  const [syncError, setSyncError] = useState<string | null>(null);
   const skipHistoryLoadRef = useRef(false);
   const preserveWorkspaceSelectionRef = useRef(false);
   const streamAbortRef = useRef<AbortController | null>(null);
@@ -1843,6 +1844,7 @@ export default function DashboardPage() {
   async function refreshSelectedRepo() {
     if (!selectedRepo) return;
     setSyncing(true);
+    setSyncError(null);
     try {
       await apiPost(`/api/repos/${selectedRepo.id}/sync`, {
         sync_issues: true,
@@ -1864,6 +1866,9 @@ export default function DashboardPage() {
         return next;
       });
       await loadPromptSuggestions(selectedRepo.id);
+    } catch (reason) {
+      // 同步失败（如 GitHub 限流、网络异常）只做提示，不能让整个页面崩掉
+      setSyncError(reason instanceof Error ? reason.message : "同步失败，请稍后重试");
     } finally {
       setSyncing(false);
     }
@@ -2607,6 +2612,11 @@ export default function DashboardPage() {
               <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
               {syncing ? "刷新中..." : "刷新当前项目"}
             </button>
+            {syncError && (
+              <p className="mt-2 rounded-md border border-rose-200 bg-rose-50 px-2 py-1.5 text-xs leading-5 text-rose-700">
+                {syncError}
+              </p>
+            )}
           </div>
         )}
       </aside>

@@ -18,6 +18,7 @@ class GitHubRetrievalAgent(BaseAgent):
         "list_workflow_run_jobs",
         "get_workflow_run_logs",
     ]
+    
 
     async def run(self, input_data: dict[str, Any], context: dict[str, Any]) -> dict[str, Any]:
         owner = input_data["owner"]

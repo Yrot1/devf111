@@ -24,8 +24,11 @@ SERVER_NAME = "devflow-memory-mcp"
 SERVER_VERSION = "0.1.0"
 
 for stream in (sys.stdin, sys.stdout, sys.stderr):
-    if hasattr(stream, "reconfigure"):
-        stream.reconfigure(encoding="utf-8", errors="replace")
+    # sys.* 的静态类型是 TextIO，而 reconfigure 只定义在 io.TextIOWrapper 上；
+    # 用 getattr 保留"有该方法才调用"的鸭子类型语义，同时避免类型检查器报未定义属性。
+    reconfigure = getattr(stream, "reconfigure", None)
+    if callable(reconfigure):
+        reconfigure(encoding="utf-8", errors="replace")
 
 
 def _json_schema(properties: dict[str, Any], required: list[str] | None = None) -> dict[str, Any]:
