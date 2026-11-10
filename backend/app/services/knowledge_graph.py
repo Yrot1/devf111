@@ -19,7 +19,7 @@ from app.db.models import (
     ThreadMemory,
     WorkflowRun,
 )
-
+#11-10的
 GRAPH_NODE_LIMIT = 72
 ISSUE_REF_RE = re.compile(r"(?<![A-Za-z])#(\d+)\b")
 CLOSING_ISSUE_RE = re.compile(
